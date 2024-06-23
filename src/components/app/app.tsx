@@ -39,10 +39,6 @@ const App = () => {
     navigate(-1);
   };
 
-  // useEffect(() => {
-  //   console.log('Текущее состояние background:', background);
-  // }, [background]);
-
   const getParam = () => {
     const param = useParams();
     return `#${param.number}`;

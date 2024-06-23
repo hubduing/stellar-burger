@@ -22,7 +22,7 @@ export const OrderInfo: FC = () => {
     if (number && !isNaN(parsedNumber)) {
       dispatch(getOrder(parsedNumber));
     }
-  }, [number, dispatch]);
+  }, [number, orderData, dispatch]);
 
   /* Готовим данные для отображения */
   const orderInfo = useMemo(() => {

@@ -21,5 +21,5 @@ export const ProfileOrders: FC = () => {
     }
   }, [dispatch]);
 
-  return isLoading ? <Preloader /> : <ProfileOrdersUI orders={orders} />;
+  return <ProfileOrdersUI orders={orders} />;
 };
