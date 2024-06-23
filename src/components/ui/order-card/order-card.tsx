@@ -13,7 +13,7 @@ import { OrderStatus } from '@components';
 export const OrderCardUI: FC<OrderCardUIProps> = memo(
   // eslint-disable-next-line arrow-body-style
   ({ orderInfo, maxIngredients, locationState }) => {
-    // console.log(locationState);
+    // console.log(locationState.background);
     return (
       <Link
         to={orderInfo.number.toString()}

@@ -1,8 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Preloader, ProfileMenuUI } from '@ui';
 import { useSelector } from '../../services/store';
-import { selectIsLoading } from '../../slices/burgerSlice';
-import { selectUser } from '../../slices/userSlice';
+import { selectIsUserLoading, selectUser } from '../../slices/userSlice';
 import { getCookie } from '../../utils/cookie';
 
 type ProtectedRouteProps = {
@@ -14,10 +13,11 @@ export const ProtectedRoute = ({
   onlyUnAuth,
   children
 }: ProtectedRouteProps) => {
-  const location = useLocation();
-  const isLoading = useSelector(selectIsLoading);
+  const isLoading = useSelector(selectIsUserLoading);
   const user = useSelector(selectUser);
   const accessToken = getCookie('accessToken');
+  const location = useLocation();
+
   if (isLoading && accessToken) {
     // пока идёт чекаут пользователя, показываем прелоадер
     return <Preloader />;
@@ -26,7 +26,7 @@ export const ProtectedRoute = ({
   if (!onlyUnAuth && !user) {
     return <Navigate replace to='/login' state={{ from: location }} />;
   }
-
+  // console.log(user, onlyUnAuth);
   if (onlyUnAuth && user) {
     const from = location.state?.from || { pathname: '/' };
 

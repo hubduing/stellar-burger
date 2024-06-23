@@ -39,16 +39,14 @@ const App = () => {
     navigate(-1);
   };
 
+  // useEffect(() => {
+  //   console.log('Текущее состояние background:', background);
+  // }, [background]);
+
   const getParam = () => {
     const param = useParams();
-    // console.log(param.number);
     return `#${param.number}`;
   };
-
-  useEffect(() => {
-    console.log('Текущее состояние background:', background);
-  }, [background]);
-
   useEffect(() => {
     const accessToken = getCookie('accessToken');
     if (accessToken) {

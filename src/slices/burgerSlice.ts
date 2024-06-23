@@ -180,6 +180,7 @@ const burgerSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
+        state.isLoading = false;
         state.error =
           action.payload instanceof Error
             ? action.payload
@@ -224,12 +225,10 @@ const burgerSlice = createSlice({
       .addCase(getOrder.fulfilled, (state, action) => {
         state.isLoading = false;
         state.currentOrder = action.payload.orders[0];
-        // console.log(state.currentOrder);
       });
   }
 });
 
-// Экспортируйте действия и редьюсер
 export const {
   selectBuns,
   selectIngredients,

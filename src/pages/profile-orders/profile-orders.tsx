@@ -8,6 +8,7 @@ import {
   selectOrders
 } from '../../slices/burgerSlice';
 import { Preloader } from '@ui';
+import { useLocation } from 'react-router-dom';
 
 export const ProfileOrders: FC = () => {
   const orders: TOrder[] = useSelector(selectOrders);
@@ -19,7 +20,6 @@ export const ProfileOrders: FC = () => {
       dispatch(fetchOrders());
     }
   }, [dispatch]);
-  console.log(isLoading);
 
   return isLoading ? <Preloader /> : <ProfileOrdersUI orders={orders} />;
 };
