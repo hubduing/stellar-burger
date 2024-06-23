@@ -13,7 +13,7 @@ import { useLocation } from 'react-router';
 import clsx from 'clsx';
 
 export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
-  const location = useLocation(); // Не забудьте импортировать useLocation из 'react-router-dom'
+  const location = useLocation();
 
   return (
     <header className={styles.header}>
@@ -45,16 +45,17 @@ export const AppHeaderUI: FC<TAppHeaderUIProps> = ({ userName }) => {
             <Logo className='' />
           </Link>
         </div>
-        <Link
-          to='/profile'
-          className={clsx(styles.link, {
-            [styles.link_active]: location.pathname === '/profile'
-          })}
-        >
-          <ProfileIcon type={'primary'} />
-          <p className='text text_type_main-default ml-2'>
-            {userName || 'Личный кабинет'}
-          </p>
+        <Link to='/profile'>
+          <div
+            className={clsx(styles.link_position_last, styles.link, {
+              [styles.link_active]: location.pathname === '/profile'
+            })}
+          >
+            <ProfileIcon type={'primary'} />
+            <p className='text text_type_main-default ml-2'>
+              {userName || 'Личный кабинет'}
+            </p>
+          </div>
         </Link>
       </nav>
     </header>

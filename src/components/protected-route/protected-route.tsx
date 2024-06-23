@@ -17,9 +17,6 @@ export const ProtectedRoute = ({
   const location = useLocation();
   const isLoading = useSelector(selectIsLoading);
   const user = useSelector(selectUser);
-  // const user = {
-  //   user: 'user'
-  // };
   const accessToken = getCookie('accessToken');
   if (isLoading && accessToken) {
     // пока идёт чекаут пользователя, показываем прелоадер

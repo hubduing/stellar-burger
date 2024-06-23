@@ -13,24 +13,41 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useMatch,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route';
-import { useDispatch, useSelector } from '../../services/store';
-import { fetchIngredients, selectIsLoading } from '../../slices/burgerSlice';
+import { useDispatch } from '../../services/store';
+import { fetchIngredients } from '../../slices/burgerSlice';
 import { getCookie } from '../../utils/cookie';
 import { getUser } from '../..//slices/userSlice';
 import { useEffect } from 'react';
 
 const App = () => {
   const location = useLocation();
-  const backgroundLocation = location.state?.background;
+  const background = location.state?.background;
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectIsLoading);
+
   // Функция для закрытия модального окна
   const modalOnClose = () => {
     navigate(-1);
   };
+
+  const getParam = () => {
+    const param = useParams();
+    // console.log(param.number);
+    return `#${param.number}`;
+  };
+
+  useEffect(() => {
+    console.log('Текущее состояние background:', background);
+  }, [background]);
 
   useEffect(() => {
     const accessToken = getCookie('accessToken');
@@ -43,10 +60,9 @@ const App = () => {
   return (
     <div className={styles.app}>
       <AppHeader />
-      <Routes location={backgroundLocation || location}>
+      <Routes location={background || location}>
         <Route path='/' element={<ConstructorPage />} />
         <Route path='/feed' element={<Feed />} />
-        {/* Защищенные маршруты потребуют дополнительной логики аутентификации */}
         <Route
           path='/login'
           element={
@@ -107,12 +123,13 @@ const App = () => {
         />
         <Route path='/*' element={<NotFound404 />} />
       </Routes>
-      {backgroundLocation && (
+
+      {background && (
         <Routes>
           <Route
             path='/feed/:number'
             element={
-              <Modal title={'1'} onClose={modalOnClose}>
+              <Modal title={getParam} onClose={modalOnClose}>
                 <OrderInfo />
               </Modal>
             }
@@ -129,7 +146,7 @@ const App = () => {
             path='/profile/orders/:number'
             element={
               <ProtectedRoute>
-                <Modal title={'1'} onClose={modalOnClose}>
+                <Modal title={getParam} onClose={modalOnClose}>
                   <OrderInfo />
                 </Modal>
               </ProtectedRoute>
