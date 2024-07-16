@@ -24,11 +24,11 @@ interface BurgerState {
   orderUser: TOrder[];
   isLoading: boolean;
   currentOrder: TOrder | null;
-  error: Error | null;
+  error: string | null;
   burgerConstructor: IBurgerConstructor;
 }
 
-const initialState: BurgerState = {
+export const initialState: BurgerState = {
   ingredients: [],
   buns: [],
   mains: [],
@@ -164,12 +164,7 @@ const burgerSlice = createSlice({
       })
       .addCase(fetchFeeds.rejected, (state, action) => {
         state.isLoading = false;
-        state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+        state.error = action.error.message || 'Unknown error';
       })
       .addCase(fetchFeeds.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -181,12 +176,7 @@ const burgerSlice = createSlice({
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.isLoading = false;
-        state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+        state.error = action.error.message || 'Unknown error';
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -198,12 +188,7 @@ const burgerSlice = createSlice({
       })
       .addCase(orderBurger.rejected, (state, action) => {
         state.isLoading = false;
-        state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+        state.error = action.error.message || 'Unknown error';
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -215,12 +200,13 @@ const burgerSlice = createSlice({
       })
       .addCase(getOrder.rejected, (state, action) => {
         state.isLoading = false;
-        state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+        state.error = action.error.message || 'Unknown error';
+        // state.error =
+        //   action.payload instanceof Error
+        //     ? action.payload
+        //     : new Error(
+        //         action.payload ? String(action.payload) : 'Unknown error'
+        //       );
       })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.isLoading = false;
