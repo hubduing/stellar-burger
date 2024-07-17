@@ -15,7 +15,7 @@ interface IBurgerConstructor {
   bun: Partial<TIngredient> | null;
 }
 
-interface BurgerState {
+export interface BurgerState {
   ingredients: TIngredient[];
   buns: TIngredient[];
   mains: TIngredient[];
@@ -28,7 +28,7 @@ interface BurgerState {
   burgerConstructor: IBurgerConstructor;
 }
 
-const initialState: BurgerState = {
+export const initialState: BurgerState = {
   ingredients: [],
   buns: [],
   mains: [],
@@ -111,8 +111,10 @@ const burgerSlice = createSlice({
         state.burgerConstructor.ingredients,
         action.payload
       );
-      // console.log('DOWN', state.burgerConstructor.ingredients[index]);
-      if (index !== -1 && index < state.ingredients.length - 1) {
+      if (
+        index !== -1 &&
+        index < state.burgerConstructor.ingredients.length - 1
+      ) {
         [
           state.burgerConstructor.ingredients[index],
           state.burgerConstructor.ingredients[index + 1]
