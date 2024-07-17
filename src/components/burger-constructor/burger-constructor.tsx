@@ -2,24 +2,29 @@ import { FC, useMemo } from 'react';
 import { TConstructorIngredient } from '@utils-types';
 import { BurgerConstructorUI } from '@ui';
 import { useDispatch, useSelector } from '../../services/store';
-import {
-  orderBurger,
-  selectBurgerConstructor,
-  selectIsLoading,
-  selectOrderModal,
-  setOrderModal
-} from '../../slices/burgerSlice';
 import { selectUser } from '../../slices/userSlice';
 import { useNavigate } from 'react-router-dom';
+
+import {
+  selectIngredients,
+  setOrderModal
+} from '../../slices/constructorSlice';
+import {
+  orderBurger,
+  selectOrderModalData,
+  selectOrderRequest,
+} from '../../slices/orderSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const constructorItems = useSelector(selectBurgerConstructor);
-  const orderModalData = useSelector(selectOrderModal);
+  const constructorItems = useSelector(selectIngredients);
+  console.log(constructorItems);
+  
+  const orderRequest = useSelector(selectOrderRequest);
+  const orderModalData = useSelector(selectOrderModalData);
   const user = useSelector(selectUser);
-  const orderRequest = useSelector(selectIsLoading);
   let price = 0;
 
   const onOrderClick = () => {

@@ -7,7 +7,7 @@ import {
   getOrder,
   selectIngredients,
   selectCurrentOrder
-} from '../../slices/burgerSlice';
+} from '../../slices/temp/burgerSlice';
 import { useParams } from 'react-router';
 
 export const OrderInfo: FC = () => {

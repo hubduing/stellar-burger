@@ -2,7 +2,7 @@ import { FC } from 'react';
 import { Preloader } from '../ui/preloader';
 import { IngredientDetailsUI } from '../ui/ingredient-details';
 import { useSelector } from '../../services/store';
-import { selectIngredients } from '../../slices/burgerSlice';
+import { selectIngredients } from '../../slices/temp/burgerSlice';
 import { useParams } from 'react-router';
 
 export const IngredientDetails: FC = () => {

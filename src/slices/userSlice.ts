@@ -8,7 +8,6 @@ import {
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import { setCookie } from '../utils/cookie';
-import { stat } from 'fs';
 
 export const getUser = createAsyncThunk('getUser', getUserApi);
 export const registerUser = createAsyncThunk('registerUser', registerUserApi);

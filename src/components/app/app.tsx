@@ -23,10 +23,12 @@ import {
 } from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route';
 import { useDispatch } from '../../services/store';
-import { fetchIngredients } from '../../slices/burgerSlice';
+// import { fetchIngredients } from '../../slices/temp/burgerSlice';
 import { getCookie } from '../../utils/cookie';
 import { getUser } from '../..//slices/userSlice';
 import { useEffect } from 'react';
+
+import { getIngredients } from '../../slices/ingredientSlice';
 
 const App = () => {
   const location = useLocation();
@@ -48,8 +50,8 @@ const App = () => {
     if (accessToken) {
       dispatch(getUser());
     }
-    dispatch(fetchIngredients());
-  }, []);
+    dispatch(getIngredients());
+  }, [dispatch]);
 
   return (
     <div className={styles.app}>
