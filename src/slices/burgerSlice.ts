@@ -130,7 +130,11 @@ const burgerSlice = createSlice({
     selectBuns: (stateBurger) => stateBurger.buns,
     selectMains: (stateBurger) => stateBurger.mains,
     selectSauces: (stateBurger) => stateBurger.sauces,
-    selectIngredients: (stateBurger) => stateBurger.ingredients,
+    // selectIngredients: (stateBurger) => stateBurger.ingredients,
+    selectIngredients: (stateBurger) => {
+      console.log(stateBurger.ingredients);
+      return stateBurger.ingredients;
+    },
     selectFeeds: (stateBurger) => stateBurger.feeds,
     selectOrders: (stateBurger) => stateBurger.orderUser,
     selectCurrentOrder: (stateBurger) => stateBurger.currentOrder,
