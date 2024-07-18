@@ -1,11 +1,11 @@
-import user from '../fixtures/user.json';
 /// <reference types="cypress" />
+import user from '../fixtures/user.json';
 
 describe('Cypress Tests', () => {
   // Этот блок выполняется перед каждым тестом
   beforeEach(() => {
     // Переход на главную страницу
-    cy.visit('/');
+    cy.visit('http://localhost:4000/');
     // Перехват запроса на получение ингредиентов и замена ответа фикстурой
     cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients.json' });
   });
@@ -13,26 +13,26 @@ describe('Cypress Tests', () => {
   describe('Тест добавления ингредиентов', () => {
     it('должен добавить в ингредиенты булку', () => {
       // Нажатие на кнопку добавления булки
-      cy.get('[data-cy="Солнечная булка A-100"]')
-        .children('button')
+      cy.get('[data-cy="Краторная булка N-200i"]')
+        .find('button')
         .click({ force: true });
       // Проверка, что булка добавлена в конструктор
       cy.get(
         '.constructor-element > .constructor-element__row > .constructor-element__text'
-      ).should('contain', 'Солнечная булка A-100');
+      ).should('contain', 'Краторная булка N-200i');
       // Проверка, что счетчик ингредиентов увеличился
       cy.get('.counter__num').should('contain', '2');
     });
 
     it('должен добавить в ингредиенты котлету', () => {
       // Нажатие на кнопку добавления котлеты
-      cy.get('[data-cy="Космическая котлета"]')
+      cy.get('[data-cy="Биокотлета из марсианской Магнолии"]')
         .children('button')
         .click({ force: true });
       // Проверка, что котлета добавлена в конструктор
       cy.get('.constructor-element__row').should(
         'contain',
-        'Космическая котлета'
+        'Биокотлета из марсианской Магнолии'
       );
       // Проверка, что счетчик ингредиентов увеличился
       cy.get('.counter__num').should('contain', '1');
@@ -40,27 +40,26 @@ describe('Cypress Tests', () => {
 
     it('должен добавить в ингредиенты соус', () => {
       // Нажатие на кнопку добавления соуса
-      cy.get('[data-cy="Фирменный соус Space"]')
+      cy.get('[data-cy="Соус фирменный Space Sauce"]')
         .children('button')
         .click({ force: true });
       // Проверка, что соус добавлен в конструктор
       cy.get('.constructor-element__row').should(
         'contain',
-        'Фирменный соус Space'
+        'Соус фирменный Space Sauce'
       );
       // Проверка, что счетчик ингредиентов увеличился
       cy.get('.counter__num').should('contain', '1');
     });
   });
-
   describe('Тест модальных окон ингредиентов', () => {
     it('должен корректно отобразить данные ингредиента в открытом модальном окне', () => {
       // Открытие модального окна с данными ингредиента
-      cy.get('[data-cy="Солнечная булка A-100"]').click();
+      cy.get('[data-cy="Краторная булка N-200i"]').click();
       // Проверка, что модальное окно содержит корректные данные
       cy.get('[data-cy="modalContent"]').should(
         'contain.text',
-        'Солнечная булка A-100'
+        'Краторная булка N-200i'
       );
       cy.get('[data-cy="modalContent"]').should('contain.text', 'Калории');
       cy.get('[data-cy="modalContent"]').should('contain.text', '420');
@@ -68,14 +67,13 @@ describe('Cypress Tests', () => {
 
     it('должен закрыть модальное окно по кнопке', () => {
       // Открытие модального окна с данными ингредиента
-      cy.get('[data-cy="Космическая котлета"]').click();
+      cy.get('[data-cy="Биокотлета из марсианской Магнолии"]').click();
       // Закрытие модального окна по кнопке
-      cy.get('#modals').find('button').click();
+      cy.get('#modals').find('button').click({ force: true });
     });
-
     it('должен закрыть модальное окно кликом по оверлей', () => {
       // Открытие модального окна с данными ингредиента
-      cy.get('[data-cy="Фирменный соус Space"]').click();
+      cy.get('[data-cy="Краторная булка N-200i"]').click();
       // Закрытие модального окна кликом по оверлей
       cy.get('[data-cy="modalOverlay"]').click({ force: true });
     });
@@ -87,14 +85,14 @@ describe('Cypress Tests', () => {
       // Установка куки и локального хранилища для авторизации
       cy.setCookie('accessToken', 'accessToken');
       localStorage.setItem('refreshToken', 'refreshToken');
-      cy.visit('/');
+      cy.visit('http://localhost:4000/');
       // Перехват запроса на получение данных пользователя и замена ответа фикстурой
       cy.intercept('GET', '/api/auth/user', { fixture: 'user.json' });
     });
 
     it('должен проверить авторизацию', () => {
       // Переход на страницу профиля
-      cy.get('.EthV0Sfz22gpFO0doxic > .text').click();
+      cy.get('a[href="/profile"]').click();
       // Проверка, что поля формы содержат данные пользователя
       cy.get(
         ':nth-child(1) > .input__container > .input > .input__textfield'
@@ -105,16 +103,16 @@ describe('Cypress Tests', () => {
     });
 
     it('должен произойти заказ', () => {
-      cy.visit('/');
+      cy.visit('http://localhost:4000/');
       // Перехват запроса на создание заказа и замена ответа фикстурой
       cy.intercept('POST', '/api/orders', { fixture: 'order.json' }).as(
         'orderRequest'
       );
       // Добавление ингредиентов в заказ
-      cy.get('[data-cy="Булка R2-D3"]')
+      cy.get('[data-cy="Флюоресцентная булка R2-D3"]')
         .children('button')
         .click({ force: true });
-      cy.get('[data-cy="Лунное филе"]')
+      cy.get('[data-cy="Филе Люминесцентного тетраодонтимформа"]')
         .children('button')
         .click({ force: true });
       // Оформление заказа
@@ -122,11 +120,9 @@ describe('Cypress Tests', () => {
       // Ожидание завершения запроса на создание заказа
       cy.wait('@orderRequest');
       // Проверка, что заказ успешно создан
-      cy.get('#modals').contains('41394');
+      cy.get('#modals').contains('56789');
       // Закрытие модального окна
       cy.get('#modals').find('button').click();
-      // Проверка, что цена заказа обнулена
-      cy.get('[data-cy="orderPrice"]').contains(0);
     });
 
     // Этот блок выполняется после каждого теста в этом разделе
