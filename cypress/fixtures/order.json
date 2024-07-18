@@ -1,0 +1,43 @@
+{
+  "success": true,
+  "order": {
+    "_id": "1234567890abcdef12345678",
+    "ingredients": [
+      {
+        "_id": "abcdef1234567890abcdef12",
+        "name": "Булка R2-D3",
+        "type": "bun",
+        "proteins": 50,
+        "fat": 20,
+        "carbohydrates": 70,
+        "calories": 500,
+        "price": 1200,
+        "image": "https://example.com/images/bun-02.png",
+        "image_mobile": "https://example.com/images/bun-02-mobile.png",
+        "image_large": "https://example.com/images/bun-02-large.png",
+        "__v": 0
+      },
+      {
+        "_id": "abcdef1234567890abcdef34",
+        "name": "Лунное филе",
+        "type": "main",
+        "proteins": 100,
+        "fat": 50,
+        "carbohydrates": 30,
+        "calories": 800,
+        "price": 1500,
+        "image": "https://example.com/images/meat-04.png",
+        "image_mobile": "https://example.com/images/meat-04-mobile.png",
+        "image_large": "https://example.com/images/meat-04-large.png",
+        "__v": 0
+      }
+    ],
+    "owner": { "email": "john.doe@example.com", "name": "John Doe" },
+    "status": "in progress",
+    "name": "Космический дракон-бургер",
+    "createdAt": "2024-07-17T07:01:31.325Z",
+    "updatedAt": "2024-07-17T07:01:31.700Z",
+    "number": 56789,
+    "price": 2700
+  }
+}
