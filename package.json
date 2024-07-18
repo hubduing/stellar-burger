@@ -94,7 +94,7 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx ./src",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier ./src --write",
-    "test": "jest --config jest.config.ts",
+    "test": "jest --config jest.config.js",
     "cypress:open": "cypress open --config-file cypress.config.ts"
   },
   "eslintConfig": {
