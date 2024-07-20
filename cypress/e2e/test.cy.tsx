@@ -12,6 +12,10 @@ describe('Cypress Tests', () => {
 
   describe('Тест добавления ингредиентов', () => {
     it('должен добавить в ингредиенты булку', () => {
+      // Проверка начального состояния счетчика
+      cy.get('[data-cy="Краторная булка N-200i"]')
+        .find('.counter__num')
+        .should('not.exist');
       // Нажатие на кнопку добавления булки
       cy.get('[data-cy="Краторная булка N-200i"]')
         .find('button')
@@ -25,6 +29,10 @@ describe('Cypress Tests', () => {
     });
 
     it('должен добавить в ингредиенты котлету', () => {
+      // Проверка начального состояния счетчика
+      cy.get('[data-cy="Биокотлета из марсианской Магнолии"]')
+        .find('.counter__num')
+        .should('not.exist');
       // Нажатие на кнопку добавления котлеты
       cy.get('[data-cy="Биокотлета из марсианской Магнолии"]')
         .children('button')
@@ -39,6 +47,10 @@ describe('Cypress Tests', () => {
     });
 
     it('должен добавить в ингредиенты соус', () => {
+      // Проверка начального состояния счетчика
+      cy.get('[data-cy="Соус фирменный Space Sauce"]')
+        .find('.counter__num')
+        .should('not.exist');
       // Нажатие на кнопку добавления соуса
       cy.get('[data-cy="Соус фирменный Space Sauce"]')
         .children('button')
@@ -48,7 +60,7 @@ describe('Cypress Tests', () => {
         'contain',
         'Соус фирменный Space Sauce'
       );
-      // Проверка, что счетчик ингредиентов увеличился
+      // Проверка, что счетчик соусов увеличился
       cy.get('.counter__num').should('contain', '1');
     });
   });
@@ -71,6 +83,7 @@ describe('Cypress Tests', () => {
       // Закрытие модального окна по кнопке
       cy.get('#modals').find('button').click({ force: true });
     });
+
     it('должен закрыть модальное окно кликом по оверлей', () => {
       // Открытие модального окна с данными ингредиента
       cy.get('[data-cy="Краторная булка N-200i"]').click();
@@ -80,6 +93,8 @@ describe('Cypress Tests', () => {
   });
 
   describe('Тест заказа', () => {
+    let previousOrderNumber = '';
+
     // Этот блок выполняется перед каждым тестом в этом разделе
     beforeEach(() => {
       // Установка куки и локального хранилища для авторизации
@@ -120,7 +135,16 @@ describe('Cypress Tests', () => {
       // Ожидание завершения запроса на создание заказа
       cy.wait('@orderRequest');
       // Проверка, что заказ успешно создан
-      cy.get('#modals').contains('56789');
+      cy.get('#modals')
+        .contains('56789')
+        .then(($orderNumber) => {
+          const currentOrderNumber = $orderNumber.text();
+          console.log(currentOrderNumber);
+          if (previousOrderNumber) {
+            expect(currentOrderNumber).to.not.equal(previousOrderNumber);
+          }
+          previousOrderNumber = currentOrderNumber;
+        });
       // Закрытие модального окна
       cy.get('#modals').find('button').click();
     });
