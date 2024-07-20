@@ -5,7 +5,7 @@ describe('Cypress Tests', () => {
   // Этот блок выполняется перед каждым тестом
   beforeEach(() => {
     // Переход на главную страницу
-    cy.visit('http://localhost:4000/');
+    cy.visit('/');
     // Перехват запроса на получение ингредиентов и замена ответа фикстурой
     cy.intercept('GET', '/api/ingredients', { fixture: 'ingredients.json' });
   });
@@ -85,7 +85,7 @@ describe('Cypress Tests', () => {
       // Установка куки и локального хранилища для авторизации
       cy.setCookie('accessToken', 'accessToken');
       localStorage.setItem('refreshToken', 'refreshToken');
-      cy.visit('http://localhost:4000/');
+      cy.visit('/');
       // Перехват запроса на получение данных пользователя и замена ответа фикстурой
       cy.intercept('GET', '/api/auth/user', { fixture: 'user.json' });
     });
@@ -103,7 +103,7 @@ describe('Cypress Tests', () => {
     });
 
     it('должен произойти заказ', () => {
-      cy.visit('http://localhost:4000/');
+      cy.visit('/');
       // Перехват запроса на создание заказа и замена ответа фикстурой
       cy.intercept('POST', '/api/orders', { fixture: 'order.json' }).as(
         'orderRequest'
