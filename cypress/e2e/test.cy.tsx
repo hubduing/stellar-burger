@@ -66,6 +66,8 @@ describe('Cypress Tests', () => {
   });
   describe('Тест модальных окон ингредиентов', () => {
     it('должен корректно отобразить данные ингредиента в открытом модальном окне', () => {
+      // Проверка есть ли модальное окно на странице
+      cy.get('[data-cy="modalContent"]').should('not.exist');
       // Открытие модального окна с данными ингредиента
       cy.get('[data-cy="Краторная булка N-200i"]').click();
       // Проверка, что модальное окно содержит корректные данные
@@ -80,8 +82,13 @@ describe('Cypress Tests', () => {
     it('должен закрыть модальное окно по кнопке', () => {
       // Открытие модального окна с данными ингредиента
       cy.get('[data-cy="Биокотлета из марсианской Магнолии"]').click();
-      // Закрытие модального окна по кнопке
-      cy.get('#modals').find('button').click({ force: true });
+      // Проверка, что кнопка существует и видима
+      cy.get('[data-cy="modalContent"]')
+        .find('[data-cy="closeButton"]')
+        .should('be.visible')
+        .click({ force: true });
+      // Проверка есть ли модальное окно на странице
+      cy.get('[data-cy="modalContent"]').should('not.exist');
     });
 
     it('должен закрыть модальное окно кликом по оверлей', () => {
@@ -89,6 +96,8 @@ describe('Cypress Tests', () => {
       cy.get('[data-cy="Краторная булка N-200i"]').click();
       // Закрытие модального окна кликом по оверлей
       cy.get('[data-cy="modalOverlay"]').click({ force: true });
+      // Проверка есть ли модальное окно на странице
+      cy.get('[data-cy="modalContent"]').should('not.exist');
     });
   });
 
@@ -135,18 +144,24 @@ describe('Cypress Tests', () => {
       // Ожидание завершения запроса на создание заказа
       cy.wait('@orderRequest');
       // Проверка, что заказ успешно создан
-      cy.get('#modals')
+      cy.get('[data-cy="modalContent"]')
         .contains('56789')
         .then(($orderNumber) => {
           const currentOrderNumber = $orderNumber.text();
-          console.log(currentOrderNumber);
           if (previousOrderNumber) {
             expect(currentOrderNumber).to.not.equal(previousOrderNumber);
           }
           previousOrderNumber = currentOrderNumber;
         });
-      // Закрытие модального окна
-      cy.get('#modals').find('button').click();
+      cy.get('[data-cy="modalOverlay"]').click({ force: true });
+      cy.get('[data-cy="burgerConstructor"]').should(
+        'not.contain',
+        'Флюоресцентная булка R2-D3'
+      );
+      cy.get('[data-cy="burgerConstructor"]').should(
+        'not.contain',
+        'Филе Люминесцентного тетраодонтимформа'
+      );
     });
 
     // Этот блок выполняется после каждого теста в этом разделе
