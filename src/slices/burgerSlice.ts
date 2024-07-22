@@ -15,7 +15,7 @@ interface IBurgerConstructor {
   bun: Partial<TIngredient> | null;
 }
 
-interface BurgerState {
+export interface BurgerState {
   ingredients: TIngredient[];
   buns: TIngredient[];
   mains: TIngredient[];
@@ -24,11 +24,11 @@ interface BurgerState {
   orderUser: TOrder[];
   isLoading: boolean;
   currentOrder: TOrder | null;
-  error: Error | null;
+  error: string | null;
   burgerConstructor: IBurgerConstructor;
 }
 
-const initialState: BurgerState = {
+export const initialState: BurgerState = {
   ingredients: [],
   buns: [],
   mains: [],
@@ -111,8 +111,10 @@ const burgerSlice = createSlice({
         state.burgerConstructor.ingredients,
         action.payload
       );
-      // console.log('DOWN', state.burgerConstructor.ingredients[index]);
-      if (index !== -1 && index < state.ingredients.length - 1) {
+      if (
+        index !== -1 &&
+        index < state.burgerConstructor.ingredients.length - 1
+      ) {
         [
           state.burgerConstructor.ingredients[index],
           state.burgerConstructor.ingredients[index + 1]
@@ -142,8 +144,10 @@ const burgerSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(fetchIngredients.rejected, (state) => {
+      .addCase(fetchIngredients.rejected, (state, action) => {
         state.isLoading = false;
+        state.error =
+          (action.payload as string) || action.error.message || 'Unknown error';
       })
       .addCase(fetchIngredients.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -165,11 +169,7 @@ const burgerSlice = createSlice({
       .addCase(fetchFeeds.rejected, (state, action) => {
         state.isLoading = false;
         state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+          (action.payload as string) || action.error.message || 'Unknown error';
       })
       .addCase(fetchFeeds.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -182,11 +182,7 @@ const burgerSlice = createSlice({
       .addCase(fetchOrders.rejected, (state, action) => {
         state.isLoading = false;
         state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+          (action.payload as string) || action.error.message || 'Unknown error';
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -199,11 +195,7 @@ const burgerSlice = createSlice({
       .addCase(orderBurger.rejected, (state, action) => {
         state.isLoading = false;
         state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+          (action.payload as string) || action.error.message || 'Unknown error';
       })
       .addCase(orderBurger.fulfilled, (state, action) => {
         state.isLoading = false;
@@ -216,11 +208,7 @@ const burgerSlice = createSlice({
       .addCase(getOrder.rejected, (state, action) => {
         state.isLoading = false;
         state.error =
-          action.payload instanceof Error
-            ? action.payload
-            : new Error(
-                action.payload ? String(action.payload) : 'Unknown error'
-              );
+          (action.payload as string) || action.error.message || 'Unknown error';
       })
       .addCase(getOrder.fulfilled, (state, action) => {
         state.isLoading = false;
