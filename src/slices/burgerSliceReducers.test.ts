@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import {
+import burgerSlice, {
   getOrder,
   fetchIngredients,
   fetchFeeds,
@@ -79,13 +79,24 @@ describe('burgerSlice extraReducers', () => {
     jest.clearAllMocks();
   });
 
-  test('должен вернуть начальное состояние', () => {
-    const store = createTestStore();
-    const state = store.getState().burger;
-    expect(state).toEqual(initialState);
+  it('Тест fetchIngredients.pending запроса на серверу', () => {
+    const state = burgerSlice(initialState, fetchIngredients.pending(''));
+    expect(state.isLoading).toBe(true);
   });
 
-  test('должен обработать fetchIngredients.fulfilled', async () => {
+  it('Проверка fetchIngredients.rejected запроса на сервер', async () => {
+    (getIngredientsApi as jest.Mock).mockRejectedValueOnce(new Error('Error'));
+
+    const store = createTestStore();
+    await store.dispatch(fetchIngredients() as any);
+    const state = store.getState().burger;
+
+    expect(state.isLoading).toBe(false);
+    expect(state.ingredients).toEqual([]);
+    expect(state.error).toBe('Error');
+  });
+
+  it('Должен обработать fetchIngredients.fulfilled', async () => {
     (getIngredientsApi as jest.Mock).mockResolvedValueOnce([
       mockBun,
       mockIngredient
@@ -100,7 +111,24 @@ describe('burgerSlice extraReducers', () => {
     expect(state.isLoading).toBe(false);
   });
 
-  test('должен обработать fetchFeeds.fulfilled', async () => {
+  it('Проверка fetchFeeds.pending запроса на серверу', () => {
+    const state = burgerSlice(initialState, fetchFeeds.pending(''));
+    expect(state.isLoading).toBe(true);
+  });
+
+  it('Проверка fetchFeeds.rejected запроса на сервер', async () => {
+    (getFeedsApi as jest.Mock).mockRejectedValueOnce(new Error('Error'));
+
+    const store = createTestStore();
+    await store.dispatch(fetchFeeds() as any);
+    const state = store.getState().burger;
+
+    expect(state.isLoading).toBe(false);
+    expect(state.feeds).toEqual([]);
+    expect(state.error).toBe('Error');
+  });
+
+  it('Проверка fetchFeeds.fulfilled', async () => {
     (getFeedsApi as jest.Mock).mockResolvedValueOnce({ orders: [mockOrder] });
     const store = createTestStore();
     await store.dispatch(fetchFeeds() as any);
@@ -109,7 +137,24 @@ describe('burgerSlice extraReducers', () => {
     expect(state.isLoading).toBe(false);
   });
 
-  test('должен обработать fetchOrders.fulfilled', async () => {
+  it('Проверка fetchOrders.pending запроса на серверу', () => {
+    const state = burgerSlice(initialState, fetchOrders.pending(''));
+    expect(state.isLoading).toBe(true);
+  });
+
+  it('Проверка fetchOrders.rejected запроса на сервер', async () => {
+    (getOrdersApi as jest.Mock).mockRejectedValueOnce(new Error('Error'));
+
+    const store = createTestStore();
+    await store.dispatch(fetchOrders() as any);
+    const state = store.getState().burger;
+
+    expect(state.isLoading).toBe(false);
+    expect(state.orderUser).toEqual([]);
+    expect(state.error).toBe('Error');
+  });
+
+  it('Проверка fetchOrders.fulfilled', async () => {
     (getOrdersApi as jest.Mock).mockResolvedValueOnce([mockOrder]);
     const store = createTestStore();
     await store.dispatch(fetchOrders() as any);
@@ -118,7 +163,24 @@ describe('burgerSlice extraReducers', () => {
     expect(state.isLoading).toBe(false);
   });
 
-  test('должен обработать orderBurger.fulfilled', async () => {
+  it('Проверка orderBurger.pending запроса на серверу', () => {
+    const state = burgerReducer(initialState, orderBurger.pending('', []));
+    expect(state.isLoading).toBe(true);
+  });
+
+  it('Проверка orderBurger.rejected запроса на сервер', async () => {
+    (orderBurgerApi as jest.Mock).mockRejectedValueOnce(new Error('Error'));
+
+    const store = createTestStore();
+    await store.dispatch(orderBurger(['1', '2']) as any);
+    const state = store.getState().burger;
+
+    expect(state.isLoading).toBe(false);
+    expect(state.burgerConstructor.orderModal).toBeNull();
+    expect(state.error).toBe('Error');
+  });
+
+  it('Проверка orderBurger.fulfilled', async () => {
     (orderBurgerApi as jest.Mock).mockResolvedValueOnce({ order: mockOrder });
     const store = createTestStore();
     await store.dispatch(orderBurger(['1', '2']) as any);
@@ -127,7 +189,19 @@ describe('burgerSlice extraReducers', () => {
     expect(state.isLoading).toBe(false);
   });
 
-  test('должен обработать getOrder.fulfilled', async () => {
+  it('Проверка getOrder.rejected запроса на сервер', async () => {
+    (getOrderByNumberApi as jest.Mock).mockRejectedValueOnce(new Error('Error'));
+
+    const store = createTestStore();
+    await store.dispatch(getOrder(1) as any);
+    const state = store.getState().burger;
+
+    expect(state.isLoading).toBe(false);
+    expect(state.currentOrder).toBeNull();
+    expect(state.error).toBe('Error');
+  });
+
+  it('Проверка getOrder.fulfilled', async () => {
     (getOrderByNumberApi as jest.Mock).mockResolvedValueOnce({
       orders: [mockOrder]
     });
@@ -140,19 +214,19 @@ describe('burgerSlice extraReducers', () => {
 });
 
 describe('burgerSlice reducers', () => {
-  test('должен обработать addBun', () => {
+  it('Проверка addBun', () => {
     const state = burgerReducer(initialState, addBun(mockBun));
     expect(state.burgerConstructor.bun).toEqual(mockBun);
   });
 
-  test('должен обработать addIngredient', () => {
+  it('Проверка addIngredient', () => {
     const state = burgerReducer(initialState, addIngredient(mockIngredient));
     expect(state.burgerConstructor.ingredients).toEqual([
       { ...mockIngredient, id: 'test-uuid' }
     ]);
   });
 
-  test('должен обработать removeIngredient', () => {
+  it('Проверка removeIngredient', () => {
     const initialStateWithIngredient = {
       ...initialState,
       burgerConstructor: {
@@ -167,12 +241,12 @@ describe('burgerSlice reducers', () => {
     expect(state.burgerConstructor.ingredients).toEqual([]);
   });
 
-  test('должен обработать setOrderModal', () => {
+  it('Проверка setOrderModal', () => {
     const state = burgerReducer(initialState, setOrderModal(mockOrder));
     expect(state.burgerConstructor.orderModal).toEqual(mockOrder);
   });
 
-  test('должен обработать up', () => {
+  it('Проверка up', () => {
     const initialStateWithIngredients = {
       ...initialState,
       burgerConstructor: {
@@ -190,7 +264,7 @@ describe('burgerSlice reducers', () => {
     ]);
   });
 
-  test('должен обработать down', () => {
+  it('Проверка down', () => {
     const initialStateWithIngredients = {
       ...initialState,
       burgerConstructor: {

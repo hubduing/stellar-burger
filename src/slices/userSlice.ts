@@ -8,7 +8,6 @@ import {
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { TUser } from '@utils-types';
 import { setCookie } from '../utils/cookie';
-import { stat } from 'fs';
 
 export const getUser = createAsyncThunk('getUser', getUserApi);
 export const registerUser = createAsyncThunk('registerUser', registerUserApi);
@@ -16,14 +15,14 @@ export const updateUser = createAsyncThunk('updateUser', updateUserApi);
 export const loginUser = createAsyncThunk('loginUser', loginUserApi);
 export const logoutUser = createAsyncThunk('logoutUser', logoutApi);
 
-interface UserState {
+export interface IUserState {
   loading: boolean | null;
   user: TUser | null;
   error: string | undefined;
   isAuth: boolean;
 }
 
-const initialState: UserState = {
+const initialState: IUserState = {
   loading: false,
   user: null,
   error: '',

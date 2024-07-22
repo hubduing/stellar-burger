@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import userReducer, {
+  IUserState,
   getUser,
   registerUser,
   updateUser,
@@ -59,7 +60,7 @@ describe('userSlice extraReducers', () => {
       }
     });
 
-  test('должен обработать getUser.fulfilled', async () => {
+  it('должен обработать getUser.fulfilled', async () => {
     (getUserApi as jest.Mock).mockResolvedValueOnce({ user: mockUser });
     const store = createTestStore();
     await store.dispatch(getUser() as any);
@@ -68,7 +69,25 @@ describe('userSlice extraReducers', () => {
     expect(state.loading).toBe(false);
   });
 
-  test('должен обработать registerUser.fulfilled', async () => {
+  it('registerUser запрос должен получить true', () => {
+    const expectedState: IUserState = {
+      ...initialState,
+      loading: true,
+      error: ''
+    };
+
+    const actualState = userReducer(
+      initialState,
+      registerUser.pending('', {
+        email: 'test@example.com',
+        password: 'password',
+        name: 'any user'
+      })
+    );
+    expect(actualState).toEqual(expectedState);
+  });
+
+  it('должен обработать registerUser.fulfilled', async () => {
     (registerUserApi as jest.Mock).mockResolvedValueOnce({
       user: mockUser,
       accessToken: 'access-token',
@@ -92,7 +111,7 @@ describe('userSlice extraReducers', () => {
     );
   });
 
-  test('должен обработать updateUser.fulfilled', async () => {
+  it('должен обработать updateUser.fulfilled', async () => {
     (updateUserApi as jest.Mock).mockResolvedValueOnce({ user: mockUser });
     const store = createTestStore();
     await store.dispatch(updateUser(mockUser) as any);
@@ -102,7 +121,7 @@ describe('userSlice extraReducers', () => {
     expect(state.isAuth).toBe(true);
   });
 
-  test('должен обработать loginUser.fulfilled', async () => {
+  it('должен обработать loginUser.fulfilled', async () => {
     (loginUserApi as jest.Mock).mockResolvedValueOnce({
       user: mockUser,
       accessToken: 'access-token',
@@ -123,7 +142,7 @@ describe('userSlice extraReducers', () => {
     );
   });
 
-  test('должен обработать logoutUser.fulfilled', async () => {
+  it('должен обработать logoutUser.fulfilled', async () => {
     (logoutApi as jest.Mock).mockResolvedValueOnce({});
     const store = createTestStore();
     await store.dispatch(logoutUser() as any);
